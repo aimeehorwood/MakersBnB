@@ -1,0 +1,111 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="listings.css">
+        <style>
+      ul.nav a {
+        margin-top: 5px;
+        background-color: pink;
+        float:left;
+        margin-left: 10px;
+      }
+      ul.nav a:hover {
+        cursor: pointer;
+        background: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <ul class='nav'>
+      <li>
+        <a href="/homepage">   
+
+          <img src="logo1.png" alt="MakersBnB logo" width="40" height="40">
+
+        </a>
+      </li>
+      <li>
+        <form action="/logout" method="post">
+          <button type="submit">Log Out</button>
+        </form>
+      </li>
+      <li>
+        <form action="/my-requests" method="get">
+          <button type="submit">View My Requests</button>
+        </form>
+      </li>
+      <li>
+        <form action="/requests-for-approval" method="get">
+          <button type="submit">View Requests For Me</button>
+        </form>
+      </li>
+      <li>
+        <form action="/my-listings" method="get">
+          <button type="submit">View My Listings</button>
+        </form>
+      </li>
+      <li>
+        <form action="/messages" method="get">
+          <button type="submit">My Messages</button>
+        </form>
+      </li>
+    </ul>
+    <h1 class="nice-title">Requests made by me</h1>
+    <h2>Pending:</h2><% pending = @booking_repository.find_by_user_id(session[:user].id).select{|booking| booking.booked == 'pending'} %><% if pending.empty? %> <p>No pending bookings</p><% else %><% pending.each do |request| %> <div class="big-div">
+      <h2><%= request.name %> </h2>
+      <p>Date Requested: <%= request.date %> </p>
+      <a href="listings/<%= request.listing_id %>"> <br>
+        <button type="button" id="btn2">View listing</button>
+      </a>
+      <br>
+      <br>
+      <form action="/delete_request/<%= request.id %>" method="post">
+        <input type="submit" id="btn3" value="Cancel Request">
+      </form>
+      <p>&nbsp</p>
+    </div>
+    <br>
+    <br><% end %><% end %> <h2>Accepted:</h2><% accepted = @booking_repository.find_by_user_id(session[:user].id).select{|booking| booking.booked == 'yes'} %><% if accepted.empty?%> <p>No accepted bookings</p><% else %><% accepted.each do |request| %> <div class="big-div">
+      <h2><%= request.name %> </h2>
+      <p>Date Requested: <%= request.date %> </p>
+      <h5>
+        <a href="listings/<%= request.listing_id %>"> <br>
+          <div class="btn-container">
+            <button type="button" id="btn2">View listing</button>
+        </a>
+      </h5>
+      <p>&nbsp</p>
+    </div>
+    <br>
+    <br><% end %><% end %> <h2>Rejected:</h2>
+    <% rejected = @booking_repository.find_by_user_id(session[:user].id).select{|booking| booking.booked == 'no'} %>
+    <% if rejected.empty?%> 
+    
+        <p>No rejected bookings</p>
+    
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    <% else %><% rejected.each do |request| %> <div class="big-div">
+      <h2><%= request.name %> </h2>
+      <p>Date Requested: <%= request.date %> </p>
+      <h5>
+      <a href="listings/<%= request.listing_id %>"><br>
+      <div class="btn-container">
+        <button type="button" id="btn2">View listing</button>
+    </a>
+    </h5>
+      <p>&nbsp</p>
+    </div>
+    <br>
+    <br>
+    <% end %>
+    <% end %>
+  </body>
+</html>

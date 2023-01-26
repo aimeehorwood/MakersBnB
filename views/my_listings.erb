@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="listings.css">
+            <style>
+      ul.nav a {
+        margin-top: 5px;
+        background-color: pink;
+        float:left;
+        margin-left: 10px;
+      }
+      ul.nav a:hover {
+        cursor: pointer;
+        background: transparent;
+      }
+    </style>
+  </head>
+  <ul class='nav'>
+      <li>
+        <a href="/homepage">   
+          <img src="logo1.png" alt="MakersBnB logo" width="40" height="40">
+        </a>
+      </li>
+      <li>
+        <form action="/logout" method="post">
+          <button type="submit">Log Out</button>
+        </form>
+      </li>
+      <li>
+        <form action="/my-requests" method="get">
+          <button type="submit">View My Requests</button>
+        </form>
+      </li>
+      <li>
+        <form action="/requests-for-approval" method="get">
+          <button type="submit">View Requests For Me</button>
+        </form>
+      </li>
+      <li>
+        <form action="/my-listings" method="get">
+          <button type="submit">View My Listings</button>
+        </form>
+      </li>
+      <li>
+        <form action="/messages" method="get">
+          <button type="submit">My Messages</button>
+        </form>
+      </li>
+    </ul>
+    <body>
+    <% all_listings = @listing_repository.all.select { |listing| listing.user_id == session[:user].id } %>
+    <% if !all_listings.empty? %>
+    <h2 class="nice-title">My Listings</h2>
+      <% all_listings.reverse.each do |listing| %>
+        <div class="big-div">
+          <h2><%= listing.name %></h2>
+          <p><%= listing.description %></p>
+          <p>£<%= sprintf("%.2f", listing.price_per_night) %> per night</p>
+          <a href="/listings/<%= listing.id %>">
+          <button type="button" id="btn2">View listing</button>
+          </a>
+          <br>
+          <br>
+          <form action="/delete_listing/<%= listing.id %>" method="post">
+            <input type="submit" id="btn3" value="Delete Listing">
+          </form>
+          <p>&nbsp</p>
+        </div>
+        <br>
+        <br>
+      <% end %>
+    <% else %>
+        <h2 class="nice-title">No Listings</h2>
+    <% end %>
+    </body>
+</html>
+
+
